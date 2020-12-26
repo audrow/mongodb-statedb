@@ -14,18 +14,18 @@ Usage
 
 1. `Install MongoDB <https://docs.mongodb.com/manual/installation/>`_
 
-1. Start a MongoDB server::
+2. Start a MongoDB server::
 
     cd your/mongodb
     mongod --dbpath . --port 62345
 
-1. Clone this package and run the ``setup.py`` script::
+3. Clone this package and run the ``setup.py`` script::
 
     git clone https://github.com/audrow/mongodb-statedb
     cd mongodb-statedb
     python setup.py
 
-1. Use a ``StateDb`` instance in your code to read and write to the MongoDB database. You can see an example in ``example.py``.
+4. Use a ``StateDb`` instance in your code to read and write to the MongoDB database. You can see an example in ``example.py``.
 
 About mongodb-statedb
 ---------------------
