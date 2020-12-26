@@ -84,4 +84,4 @@ class StateDb:
 
     def __len__(self) -> int:
         """Get the number of keys in the MongoDB collection used."""
-        return self._db.count()
+        return self._db.estimated_document_count()
