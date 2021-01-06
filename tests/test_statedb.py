@@ -40,7 +40,7 @@ def statedb(mongo_client):
 def test_get_values(statedb):
     for key, value in STATE_PAIRS:
         assert statedb.exists(key)
-        assert statedb.get(key) == value
+        assert statedb.get(key) == statedb[key] == value
 
 
 def test_raise_on_get_and_set_bad_key(statedb):
@@ -61,6 +61,21 @@ def test_set_keys(statedb):
         statedb.exists(key)
         statedb.set(key, new_value)
         assert statedb.get(key) == new_value
+
+    new_keys = [
+            "key1",
+            "key2",
+            "key3",
+        ]
+    new_values = [
+        "value1",
+        "value2",
+        "value3",
+    ]
+    for key, value in zip(new_keys, new_values):
+        statedb.create(key, None)
+        statedb[key] = value
+        assert statedb.get(key) == value
 
 
 def test_create_keys(statedb):
@@ -92,3 +107,30 @@ def test_delete_all(statedb):
     assert len(statedb) == len(TEST_KEYS)
     statedb.delete_all()
     assert len(statedb) == 0
+
+
+def test_clear_keys(statedb):
+    assert len(statedb) == len(TEST_KEYS)
+    for key in TEST_KEYS:
+        assert statedb.exists(key)
+        statedb.clear(key)
+        assert statedb.get(key) is None
+    assert len(statedb) == len(TEST_KEYS)
+
+
+def test_clear_all(statedb):
+    assert len(statedb) == len(TEST_KEYS)
+    statedb.clear_all()
+    for key, value in STATE_PAIRS:
+        assert statedb.exists(key)
+        assert statedb.get(key) is None
+    assert len(statedb) == len(TEST_KEYS)
+
+
+def test_get_db_as_dict(statedb):
+    db_as_dict = {
+        'user name': 'Audrow Nash',
+        'difficulty': 1.0,
+        'last checkin': datetime.datetime(2021, 2, 3, 4, 5, 6)
+    }
+    assert statedb.get_all_as_dict() == db_as_dict

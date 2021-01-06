@@ -33,6 +33,13 @@ class StateDb:
         self._throw_error_if_key_doesnt_exist(key)
         return self._db.find_one({'_id': key})[self._VALUE_KEY]
 
+    def get_all_as_dict(self):
+        collection_contents = self._db.find({})
+        collection_contents_as_dict = {}
+        for document in collection_contents:
+            collection_contents_as_dict[document['_id']] = document[self._VALUE_KEY]
+        return collection_contents_as_dict
+
     def set(self, key: str, value: Any) -> None:
         """
         Set the stored value for a key, if it exists.
@@ -58,6 +65,10 @@ class StateDb:
         """
         return self._db.find_one({'_id': key}) is not None
 
+    def is_set(self, key: str) -> bool:
+        """Check if a key exists in the database and its value is not None."""
+        return self.exists(key) and self.get(key) is not None
+
     def create(self, key: str, value: Any) -> None:
         """
         Add a new key-value pair in the MongoDB collection used.
@@ -82,6 +93,28 @@ class StateDb:
         """Delete all of the key-value pairs stored in the used collection."""
         self._db.drop()
 
+    def clear(self, key: str) -> None:
+        """
+        Set the value of the specified key to None.
+
+        :param key:
+        """
+        self.set(key, None)
+
+    def clear_all(self) -> None:
+        """Set the value of every key in the used collection to None."""
+        for document in self._db.find({}):
+            self.clear(document['_id'])
+
     def __len__(self) -> int:
         """Get the number of keys in the MongoDB collection used."""
         return self._db.estimated_document_count()
+
+    def __contains__(self, key: str) -> bool:
+        return self.exists(key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.set(key, value)
+
+    def __getitem__(self, key: str) -> Any:
+        return self.get(key)
