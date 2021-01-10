@@ -37,7 +37,9 @@ class StateDb:
         collection_contents = self._db.find({})
         collection_contents_as_dict = {}
         for document in collection_contents:
-            collection_contents_as_dict[document['_id']] = document[self._VALUE_KEY]
+            key = document['_id']
+            value = document[self._VALUE_KEY]
+            collection_contents_as_dict[key] = value
         return collection_contents_as_dict
 
     def set(self, key: str, value: Any) -> None:
