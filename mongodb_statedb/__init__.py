@@ -33,6 +33,18 @@ class StateDb:
         self._throw_error_if_key_doesnt_exist(key)
         return self._db.find_one({'_id': key})[self._VALUE_KEY]
 
+    def get_keys(self) -> list:
+        """
+        Get the keys of the database as a list.
+
+        :return: A list of database keys.
+        """
+        collection_contents = self._db.find({})
+        keys = []
+        for document in collection_contents:
+            keys.append(document['_id'])
+        return keys
+
     def set(self, key: str, value: Any) -> None:
         """
         Set the stored value for a key, if it exists.

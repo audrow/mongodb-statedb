@@ -107,3 +107,10 @@ def test_delete_all(statedb):
     assert len(statedb) == len(TEST_KEYS)
     statedb.delete_all()
     assert len(statedb) == 0
+
+
+def test_get_keys(statedb):
+    expected_keys = [STRING_KEY, NUMBER_KEY, DATE_KEY]
+    assert len(expected_keys) == len(statedb.get_keys())
+    for key in statedb.get_keys():
+        assert key in expected_keys
