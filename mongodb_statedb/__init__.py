@@ -33,20 +33,6 @@ class StateDb:
         self._throw_error_if_key_doesnt_exist(key)
         return self._db.find_one({'_id': key})[self._VALUE_KEY]
 
-    def get_all_as_dict(self) -> dict:
-        """
-        Get the contents of the database as a dictionary.
-
-        :return: The database contents as a dictionary.
-        """
-        collection_contents = self._db.find({})
-        collection_contents_as_dict = {}
-        for document in collection_contents:
-            key = document['_id']
-            value = document[self._VALUE_KEY]
-            collection_contents_as_dict[key] = value
-        return collection_contents_as_dict
-
     def set(self, key: str, value: Any) -> None:
         """
         Set the stored value for a key, if it exists.
@@ -99,19 +85,6 @@ class StateDb:
     def delete_all(self) -> None:
         """Delete all of the key-value pairs stored in the used collection."""
         self._db.drop()
-
-    def clear(self, key: str) -> None:
-        """
-        Set the value of the specified key to None.
-
-        :param key:
-        """
-        self.set(key, None)
-
-    def clear_all(self) -> None:
-        """Set the value of every key in the used collection to None."""
-        for document in self._db.find({}):
-            self.clear(document['_id'])
 
     def __len__(self) -> int:
         """Get the number of keys in the MongoDB collection used."""
