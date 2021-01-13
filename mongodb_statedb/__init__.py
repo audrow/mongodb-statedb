@@ -70,10 +70,6 @@ class StateDb:
         """
         return self._db.find_one({'_id': key}) is not None
 
-    def is_set(self, key: str) -> bool:
-        """Check if a key exists in the database and its value is not None."""
-        return self.exists(key) and self.get(key) is not None
-
     def create(self, key: str, value: Any) -> None:
         """
         Add a new key-value pair in the MongoDB collection used.
