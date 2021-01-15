@@ -63,10 +63,10 @@ def test_set_keys(statedb):
         assert statedb.get(key) == new_value
 
     new_keys = [
-            "key1",
-            "key2",
-            "key3",
-        ]
+        "key1",
+        "key2",
+        "key3",
+    ]
     new_values = [
         "value1",
         "value2",
