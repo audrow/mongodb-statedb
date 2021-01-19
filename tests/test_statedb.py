@@ -40,7 +40,7 @@ def statedb(mongo_client):
 def test_get_values(statedb):
     for key, value in STATE_PAIRS:
         assert statedb.exists(key)
-        assert statedb.get(key) == value
+        assert statedb.get(key) == statedb[key] == value
 
 
 def test_raise_on_get_and_set_bad_key(statedb):
@@ -61,6 +61,21 @@ def test_set_keys(statedb):
         statedb.exists(key)
         statedb.set(key, new_value)
         assert statedb.get(key) == new_value
+
+    new_keys = [
+        "key1",
+        "key2",
+        "key3",
+    ]
+    new_values = [
+        "value1",
+        "value2",
+        "value3",
+    ]
+    for key, value in zip(new_keys, new_values):
+        statedb.create(key, None)
+        statedb[key] = value
+        assert statedb.get(key) == value
 
 
 def test_create_keys(statedb):
@@ -92,3 +107,10 @@ def test_delete_all(statedb):
     assert len(statedb) == len(TEST_KEYS)
     statedb.delete_all()
     assert len(statedb) == 0
+
+
+def test_get_keys(statedb):
+    expected_keys = [STRING_KEY, NUMBER_KEY, DATE_KEY]
+    assert len(expected_keys) == len(statedb.get_keys())
+    for key in statedb.get_keys():
+        assert key in expected_keys

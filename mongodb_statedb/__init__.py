@@ -33,6 +33,18 @@ class StateDb:
         self._throw_error_if_key_doesnt_exist(key)
         return self._db.find_one({'_id': key})[self._VALUE_KEY]
 
+    def get_keys(self) -> list:
+        """
+        Get the keys of the database as a list.
+
+        :return: A list of database keys.
+        """
+        collection_contents = self._db.find({})
+        keys = []
+        for document in collection_contents:
+            keys.append(document['_id'])
+        return keys
+
     def set(self, key: str, value: Any) -> None:
         """
         Set the stored value for a key, if it exists.
@@ -85,3 +97,25 @@ class StateDb:
     def __len__(self) -> int:
         """Get the number of keys in the MongoDB collection used."""
         return self._db.estimated_document_count()
+
+    def __contains__(self, key: str) -> bool:
+        """Check if a key exists in the database."""
+        return self.exists(key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        """
+        Set the stored value for a key, if it exists.
+
+        :param key: The unique key in the database.
+        :param value: The value you wish to associate with the key.
+        """
+        self.set(key, value)
+
+    def __getitem__(self, key: str) -> Any:
+        """
+        Get the stored value of a key, if it exists.
+
+        :param key: The unique key in the database.
+        :return: The value stored for that key.
+        """
+        return self.get(key)
